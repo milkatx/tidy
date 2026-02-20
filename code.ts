@@ -584,98 +584,104 @@ figma.ui.onmessage = async (msg: PluginMessage) => {
             continue;
           }
 
+          // Load all fonts needed for the guide frame up front
+          await figma.loadFontAsync({ family: "Inter", style: "Bold" });
+          await figma.loadFontAsync({ family: "Inter", style: "Regular" });
+          await figma.loadFontAsync({ family: "Inter", style: "Medium" });
+
           // Create a section frame with guidelines
           const guideFrame = figma.createFrame();
           guideFrame.name = "📋 Guidelines";
-          guideFrame.resize(600, 400);
           guideFrame.x = 100;
           guideFrame.y = 100;
-
-          // Light background for the frame
           guideFrame.fills = [
-            {
-              type: "SOLID",
-              color: { r: 0.98, g: 0.98, b: 1 },
-            },
+            { type: "SOLID", color: { r: 0.98, g: 0.98, b: 1 } },
           ];
 
-          // Add padding with auto layout
+          // Vertical auto-layout – height grows to fit all content
           guideFrame.layoutMode = "VERTICAL";
+          guideFrame.primaryAxisSizingMode = "AUTO";
+          guideFrame.counterAxisSizingMode = "FIXED";
+          guideFrame.resize(600, guideFrame.height);
           guideFrame.paddingLeft = 40;
           guideFrame.paddingRight = 40;
           guideFrame.paddingTop = 40;
           guideFrame.paddingBottom = 40;
           guideFrame.itemSpacing = 20;
 
+          // Helper: append a text node and apply FILL + HEIGHT-resize
+          // (layoutSizingHorizontal = "FILL" is only valid after appendChild)
+          const addText = (node: TextNode) => {
+            guideFrame.appendChild(node);
+            node.layoutSizingHorizontal = "FILL";
+            node.textAutoResize = "HEIGHT";
+          };
+
           // Title
           const title = figma.createText();
-          await figma.loadFontAsync({ family: "Inter", style: "Bold" });
           title.fontName = { family: "Inter", style: "Bold" };
           title.fontSize = 32;
           title.characters = template.name;
           title.fills = [
             { type: "SOLID", color: { r: 0.11, g: 0.11, b: 0.11 } },
           ];
-          guideFrame.appendChild(title);
+          addText(title);
 
           // Description
           const description = figma.createText();
-          await figma.loadFontAsync({ family: "Inter", style: "Regular" });
           description.fontName = { family: "Inter", style: "Regular" };
           description.fontSize = 16;
           description.characters = template.description;
           description.fills = [
             { type: "SOLID", color: { r: 0.4, g: 0.4, b: 0.4 } },
           ];
-          guideFrame.appendChild(description);
+          addText(description);
 
           // Best Practices Header
           const bestPracticesHeader = figma.createText();
-          await figma.loadFontAsync({ family: "Inter", style: "Medium" });
           bestPracticesHeader.fontName = { family: "Inter", style: "Medium" };
           bestPracticesHeader.fontSize = 18;
           bestPracticesHeader.characters = "Best Practices";
           bestPracticesHeader.fills = [
             { type: "SOLID", color: { r: 0.11, g: 0.11, b: 0.11 } },
           ];
-          guideFrame.appendChild(bestPracticesHeader);
+          addText(bestPracticesHeader);
 
           // Best Practices List
           const practicesList = figma.createText();
           practicesList.fontName = { family: "Inter", style: "Regular" };
           practicesList.fontSize = 14;
-          practicesList.lineHeight = { value: 150, unit: "PERCENT" };
           practicesList.characters = template.bestPractices.join("\n");
           practicesList.fills = [
             { type: "SOLID", color: { r: 0.2, g: 0.2, b: 0.2 } },
           ];
-          guideFrame.appendChild(practicesList);
+          addText(practicesList);
+          practicesList.lineHeight = { value: 150, unit: "PERCENT" };
 
           // Checklist Section
           if (template.checklist && template.checklist.length > 0) {
             // Checklist Header
             const checklistHeader = figma.createText();
-            await figma.loadFontAsync({ family: "Inter", style: "Medium" });
             checklistHeader.fontName = { family: "Inter", style: "Medium" };
             checklistHeader.fontSize = 18;
             checklistHeader.characters = "Checklist";
             checklistHeader.fills = [
               { type: "SOLID", color: { r: 0.11, g: 0.11, b: 0.11 } },
             ];
-            guideFrame.appendChild(checklistHeader);
+            addText(checklistHeader);
 
-            // Checklist Items – rendered as text with [ ] prefix
+            // Checklist Items – each rendered as "[ ] item text"
             const checklistItems = figma.createText();
             checklistItems.fontName = { family: "Inter", style: "Regular" };
             checklistItems.fontSize = 14;
-            checklistItems.lineHeight = { value: 150, unit: "PERCENT" };
             checklistItems.characters = template.checklist
               .map((item) => `[ ] ${item}`)
               .join("\n");
             checklistItems.fills = [
               { type: "SOLID", color: { r: 0.2, g: 0.2, b: 0.2 } },
             ];
-            guideFrame.appendChild(checklistItems);
+            addText(checklistItems);
+            checklistItems.lineHeight = { value: 150, unit: "PERCENT" };
           }
 
           page.appendChild(guideFrame);
