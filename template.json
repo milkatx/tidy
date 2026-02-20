@@ -8,6 +8,12 @@
         "Include project name",
         "Add date and version",
         "List team members"
+      ],
+      "checklist": [
+        "Add project name and client logo",
+        "Fill in team members and their roles",
+        "Set version number and launch date",
+        "Link to project brief"
       ]
     },
     {
@@ -21,6 +27,12 @@
         "Document user interviews",
         "Add personas",
         "Include journey maps"
+      ],
+      "checklist": [
+        "Conduct and document user interviews",
+        "Create user personas",
+        "Map user journey",
+        "Summarize key insights"
       ]
     },
     {
@@ -30,6 +42,12 @@
         "Screenshot competitors",
         "Note strengths/weaknesses",
         "Identify opportunities"
+      ],
+      "checklist": [
+        "Identify top 5 competitors",
+        "Capture competitor screenshots",
+        "Note strengths and weaknesses",
+        "Identify market opportunities"
       ]
     },
     {
@@ -43,6 +61,12 @@
         "Keep it simple",
         "Focus on structure",
         "Annotate decisions"
+      ],
+      "checklist": [
+        "Sketch all key screens",
+        "Define information hierarchy",
+        "Annotate layout decisions",
+        "Get stakeholder sign-off"
       ]
     },
     {
@@ -52,6 +76,12 @@
         "Follow design system",
         "Use consistent spacing",
         "Check accessibility"
+      ],
+      "checklist": [
+        "Apply design system tokens",
+        "Use consistent spacing and grid",
+        "Check color contrast ratios",
+        "Review with accessibility guidelines"
       ]
     },
     {
@@ -61,6 +91,12 @@
         "Link key user flows",
         "Add micro-interactions",
         "Test with users"
+      ],
+      "checklist": [
+        "Link all key screens in main user flow",
+        "Add transitions and micro-interactions",
+        "Share prototype link for review",
+        "Conduct usability test session"
       ]
     },
     {
@@ -70,12 +106,23 @@
     {
       "name": "Components",
       "description": "Reusable UI components",
-      "bestPractices": ["Use auto-layout", "Add variants", "Document usage"]
+      "bestPractices": ["Use auto-layout", "Add variants", "Document usage"],
+      "checklist": [
+        "Build all components with Auto Layout",
+        "Create interactive state variants",
+        "Add component description and usage notes"
+      ]
     },
     {
       "name": "Dev Handoff",
       "description": "Specs for development",
-      "bestPractices": ["Add redlines", "Export assets", "Include tokens"]
+      "bestPractices": ["Add redlines", "Export assets", "Include tokens"],
+      "checklist": [
+        "Export all assets at required sizes",
+        "Add spacing and size redlines",
+        "Export design tokens",
+        "Review handoff with engineering team"
+      ]
     }
   ]
 }

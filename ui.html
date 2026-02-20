@@ -1357,6 +1357,7 @@
         bestPractices: Array.isArray(page.bestPractices)
           ? page.bestPractices
           : [],
+        checklist: Array.isArray(page.checklist) ? page.checklist : [],
         isDivider: page.isDivider === true,
       }))
       .filter((page) => page.name);

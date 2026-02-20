@@ -17,6 +17,7 @@ interface PageTemplate {
   name: string;
   description: string;
   bestPractices: string[];
+  checklist?: string[];
   isDivider?: boolean;
 }
 
@@ -36,6 +37,12 @@ const PROJECT_TEMPLATES: Record<string, PageTemplate[]> = {
         "• Add project goals and objectives",
         "• List key stakeholders and team members",
         "• Include version history or changelog",
+      ],
+      checklist: [
+        "Add project name and client logo",
+        "Fill in team members and their roles",
+        "Define project goals and success metrics",
+        "Set version number and target launch date",
       ],
     },
     {
@@ -77,6 +84,13 @@ const PROJECT_TEMPLATES: Record<string, PageTemplate[]> = {
         "• Document interactive states and animations",
         "• Add notes for complex interactions",
       ],
+      checklist: [
+        "Export all assets at required resolutions",
+        "Add spacing and size annotations",
+        "Document all component interaction states",
+        "Review accessibility annotations",
+        "Confirm design tokens are exported",
+      ],
     },
   ],
   "mobile-app": [
@@ -88,6 +102,12 @@ const PROJECT_TEMPLATES: Record<string, PageTemplate[]> = {
         "• Define target devices and OS versions",
         "• List project goals and success metrics",
         "• Add links to related documentation",
+      ],
+      checklist: [
+        "Add app name and platform (iOS / Android / Both)",
+        "List target OS versions and devices",
+        "Define key project goals and KPIs",
+        "Link to product brief and documentation",
       ],
     },
     {
@@ -108,6 +128,12 @@ const PROJECT_TEMPLATES: Record<string, PageTemplate[]> = {
         "• Include all states (empty, loading, error, success)",
         "• Design for multiple screen sizes",
         "• Add annotations for interactions",
+      ],
+      checklist: [
+        "Design all screen states (empty, loading, error, success)",
+        "Cover multiple device sizes",
+        "Add gesture and interaction annotations",
+        "Group screens by user flow or feature",
       ],
     },
     {
@@ -151,6 +177,12 @@ const PROJECT_TEMPLATES: Record<string, PageTemplate[]> = {
         "• List contribution guidelines",
         "• Add update changelog",
       ],
+      checklist: [
+        "Add design system name and current version",
+        "Write down core design principles",
+        "Document contribution and review process",
+        "Include changelog for recent updates",
+      ],
     },
     {
       name: "🎯 Foundations",
@@ -170,6 +202,12 @@ const PROJECT_TEMPLATES: Record<string, PageTemplate[]> = {
         "• Ensure accessibility compliance (WCAG)",
         "• Create atomic components first, then molecules",
         "• Maintain consistent naming conventions",
+      ],
+      checklist: [
+        "Create all interactive states (hover, focus, disabled)",
+        "Add ARIA labels and accessibility annotations",
+        "Build with Auto Layout for flexibility",
+        "Document component props and usage examples",
       ],
     },
     {
@@ -203,6 +241,12 @@ const PROJECT_TEMPLATES: Record<string, PageTemplate[]> = {
         "• List key pages and site structure",
         "• Add brand guidelines reference",
       ],
+      checklist: [
+        "Add website name, URL, and target launch date",
+        "Define primary audience and user personas",
+        "List key pages and site architecture",
+        "Link to brand guidelines",
+      ],
     },
     {
       name: "🏠 Homepage",
@@ -212,6 +256,12 @@ const PROJECT_TEMPLATES: Record<string, PageTemplate[]> = {
         "• Include clear call-to-action above the fold",
         "• Design for fast loading and performance",
         "• Optimize for SEO and social sharing",
+      ],
+      checklist: [
+        "Design hero section with clear value proposition",
+        "Add primary CTA above the fold",
+        "Include social proof (testimonials, logos)",
+        "Optimize layout for fast load and SEO",
       ],
     },
     {
@@ -255,6 +305,12 @@ const PROJECT_TEMPLATES: Record<string, PageTemplate[]> = {
         "• List deliverables and timeline",
         "• Add client information and stakeholders",
       ],
+      checklist: [
+        "Add brand name and mission statement",
+        "Define brand personality traits and values",
+        "List all deliverables and deadlines",
+        "Include client contacts and stakeholders",
+      ],
     },
     {
       name: "🏷️ Logo",
@@ -264,6 +320,13 @@ const PROJECT_TEMPLATES: Record<string, PageTemplate[]> = {
         "• Design for light and dark backgrounds",
         "• Define clear space and minimum sizes",
         "• Include incorrect usage examples",
+      ],
+      checklist: [
+        "Create primary logo version",
+        "Create secondary and icon-only versions",
+        "Design light and dark background variants",
+        "Define minimum size and clear space rules",
+        "Add incorrect usage examples",
       ],
     },
     {
@@ -383,6 +446,7 @@ figma.ui.onmessage = async (msg: PluginMessage) => {
         bestPractices: Array.isArray(page.bestPractices)
           ? page.bestPractices
           : [],
+        checklist: Array.isArray(page.checklist) ? page.checklist : [],
         isDivider: page.isDivider === true,
       }));
 
@@ -586,6 +650,33 @@ figma.ui.onmessage = async (msg: PluginMessage) => {
             { type: "SOLID", color: { r: 0.2, g: 0.2, b: 0.2 } },
           ];
           guideFrame.appendChild(practicesList);
+
+          // Checklist Section
+          if (template.checklist && template.checklist.length > 0) {
+            // Checklist Header
+            const checklistHeader = figma.createText();
+            await figma.loadFontAsync({ family: "Inter", style: "Medium" });
+            checklistHeader.fontName = { family: "Inter", style: "Medium" };
+            checklistHeader.fontSize = 18;
+            checklistHeader.characters = "Checklist";
+            checklistHeader.fills = [
+              { type: "SOLID", color: { r: 0.11, g: 0.11, b: 0.11 } },
+            ];
+            guideFrame.appendChild(checklistHeader);
+
+            // Checklist Items – rendered as text with [ ] prefix
+            const checklistItems = figma.createText();
+            checklistItems.fontName = { family: "Inter", style: "Regular" };
+            checklistItems.fontSize = 14;
+            checklistItems.lineHeight = { value: 150, unit: "PERCENT" };
+            checklistItems.characters = template.checklist
+              .map((item) => `[ ] ${item}`)
+              .join("\n");
+            checklistItems.fills = [
+              { type: "SOLID", color: { r: 0.2, g: 0.2, b: 0.2 } },
+            ];
+            guideFrame.appendChild(checklistItems);
+          }
 
           page.appendChild(guideFrame);
 
